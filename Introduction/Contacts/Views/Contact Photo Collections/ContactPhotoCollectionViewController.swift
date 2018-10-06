@@ -26,7 +26,7 @@ class ContactPhotoCollectionViewController: UIViewController {
     
     let collectionView: UICollectionView
     var controllerModel = ContactsControllerModel()
-    var selectedCellIndex = IndexPath(item: 0, section: 0)
+    var highlightedCellIndex = IndexPath(item: 0, section: 0)
     weak var delegate: ContactPhotoCollectionViewControllerDelegate?
     
     // MARK: - Init methods
@@ -60,6 +60,11 @@ class ContactPhotoCollectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.collectionView.cellForItem(at: self.highlightedCellIndex)?.isSelected = true
     }
     
     // MARK: - Setup Methods
@@ -126,9 +131,9 @@ extension ContactPhotoCollectionViewController: UICollectionViewDelegate {
         collectionCenterPoint.x = collectionCenterPoint.x -  ContactPhotoCollectionViewController.photoItemSize.width / 2
         let cellIndexPath = self.collectionView.indexPathForItem(at: collectionCenterPoint) ?? IndexPath(item: 0, section: 0)
         let cellScrollPercentage = (scrollView.contentOffset.x - CGFloat(cellIndexPath.row) *  ContactPhotoCollectionViewController.photoItemSize.width) /  ContactPhotoCollectionViewController.photoItemSize.width
-        if self.selectedCellIndex != cellHighlightIndex {
-            self.collectionView.cellForItem(at: self.selectedCellIndex)?.isSelected = false
-            self.selectedCellIndex = cellHighlightIndex
+        if self.highlightedCellIndex != cellHighlightIndex {
+            self.collectionView.cellForItem(at: self.highlightedCellIndex)?.isSelected = false
+            self.highlightedCellIndex = cellHighlightIndex
             self.collectionView.cellForItem(at: cellHighlightIndex)?.isSelected = true
         }
         self.delegate?.contactPhotoCollectionViewDidScroll(cellPosition: cellIndexPath, cellOffsetPercentage: cellScrollPercentage)

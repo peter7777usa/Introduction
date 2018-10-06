@@ -77,8 +77,19 @@ class ContactIntroTableViewCell: UITableViewCell {
     // MARK: - Public Methods
     
     func setupCellContent(contact: Contact) {
-        self.nameLabel.text = contact.firstName + contact.lastName
+        self.nameLabel.attributedText = setupAttributedStringForNameLabel(firstName: contact.firstName, lastName: contact.lastName)
         self.positionLabel.text = contact.title
         self.introLabel.text = contact.introduction
+    }
+    
+    // MARK: - Private Methods
+    
+    private func setupAttributedStringForNameLabel(firstName: String, lastName: String) -> NSMutableAttributedString {
+        let firstNameAttributes: [NSAttributedStringKey : Any] = [.font: UIFont.systemFont(ofSize: 16, weight: .bold)]
+        let lastNameAttributes: [NSAttributedStringKey : Any] = [.font: UIFont.systemFont(ofSize: 16, weight: .light)]
+        let nameString = NSMutableAttributedString(string: firstName + " ", attributes: firstNameAttributes)
+        let lastNameString = NSMutableAttributedString(string: lastName, attributes: lastNameAttributes)
+        nameString.append(lastNameString)
+        return nameString
     }
 }
