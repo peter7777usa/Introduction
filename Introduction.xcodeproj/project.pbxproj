@@ -10,6 +10,15 @@
 		7625377621688D640044E044 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7625377521688D640044E044 /* AppDelegate.swift */; };
 		7625377D21688D660044E044 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7625377C21688D660044E044 /* Assets.xcassets */; };
 		7625378C216890320044E044 /* contacts.json in Resources */ = {isa = PBXBuildFile; fileRef = 7625378B216890320044E044 /* contacts.json */; };
+		7625378E216893DB0044E044 /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7625378D216893DB0044E044 /* ContactsViewController.swift */; };
+		76253796216894F60044E044 /* ContactIntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76253795216894F60044E044 /* ContactIntroViewController.swift */; };
+		76253798216895140044E044 /* ContactIntroTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76253797216895140044E044 /* ContactIntroTableViewCell.swift */; };
+		7625379A2168952A0044E044 /* ContactPhotoCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762537992168952A0044E044 /* ContactPhotoCollectionViewController.swift */; };
+		7625379C2168953E0044E044 /* ProfileImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7625379B2168953E0044E044 /* ProfileImageCollectionViewCell.swift */; };
+		7625379E216895B10044E044 /* ContactsControllerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7625379D216895B10044E044 /* ContactsControllerModel.swift */; };
+		762537A0216895D30044E044 /* JSONHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7625379F216895D30044E044 /* JSONHelper.swift */; };
+		762537A2216895F50044E044 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762537A1216895F50044E044 /* UIColor.swift */; };
+		762537A4216896120044E044 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762537A3216896120044E044 /* Contact.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,6 +27,15 @@
 		7625377C21688D660044E044 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7625378121688D660044E044 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7625378B216890320044E044 /* contacts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = contacts.json; sourceTree = "<group>"; };
+		7625378D216893DB0044E044 /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
+		76253795216894F60044E044 /* ContactIntroViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactIntroViewController.swift; sourceTree = "<group>"; };
+		76253797216895140044E044 /* ContactIntroTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactIntroTableViewCell.swift; sourceTree = "<group>"; };
+		762537992168952A0044E044 /* ContactPhotoCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPhotoCollectionViewController.swift; sourceTree = "<group>"; };
+		7625379B2168953E0044E044 /* ProfileImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		7625379D216895B10044E044 /* ContactsControllerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsControllerModel.swift; sourceTree = "<group>"; };
+		7625379F216895D30044E044 /* JSONHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONHelper.swift; sourceTree = "<group>"; };
+		762537A1216895F50044E044 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		762537A3216896120044E044 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +83,7 @@
 		7625378721688E250044E044 /* Data Models */ = {
 			isa = PBXGroup;
 			children = (
+				762537A3216896120044E044 /* Contact.swift */,
 			);
 			path = "Data Models";
 			sourceTree = "<group>";
@@ -72,6 +91,7 @@
 		7625378821688E420044E044 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				762537A1216895F50044E044 /* UIColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -79,6 +99,7 @@
 		7625378921688E4A0044E044 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				7625379F216895D30044E044 /* JSONHelper.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -86,8 +107,62 @@
 		7625378A21688E5A0044E044 /* Contacts */ = {
 			isa = PBXGroup;
 			children = (
+				7625378F216894250044E044 /* Model */,
+				76253790216894390044E044 /* Views */,
+				7625378D216893DB0044E044 /* ContactsViewController.swift */,
 			);
 			path = Contacts;
+			sourceTree = "<group>";
+		};
+		7625378F216894250044E044 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7625379D216895B10044E044 /* ContactsControllerModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		76253790216894390044E044 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				762537922168944D0044E044 /* Contact Photo Collections */,
+				762537912168944B0044E044 /* Contact Introduction List */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		762537912168944B0044E044 /* Contact Introduction List */ = {
+			isa = PBXGroup;
+			children = (
+				76253794216894D90044E044 /* Cells */,
+				76253795216894F60044E044 /* ContactIntroViewController.swift */,
+			);
+			path = "Contact Introduction List";
+			sourceTree = "<group>";
+		};
+		762537922168944D0044E044 /* Contact Photo Collections */ = {
+			isa = PBXGroup;
+			children = (
+				76253793216894CD0044E044 /* Cells */,
+				762537992168952A0044E044 /* ContactPhotoCollectionViewController.swift */,
+			);
+			path = "Contact Photo Collections";
+			sourceTree = "<group>";
+		};
+		76253793216894CD0044E044 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				7625379B2168953E0044E044 /* ProfileImageCollectionViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		76253794216894D90044E044 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				76253797216895140044E044 /* ContactIntroTableViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,7 +235,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7625379C2168953E0044E044 /* ProfileImageCollectionViewCell.swift in Sources */,
+				7625379A2168952A0044E044 /* ContactPhotoCollectionViewController.swift in Sources */,
+				762537A4216896120044E044 /* Contact.swift in Sources */,
 				7625377621688D640044E044 /* AppDelegate.swift in Sources */,
+				76253798216895140044E044 /* ContactIntroTableViewCell.swift in Sources */,
+				762537A2216895F50044E044 /* UIColor.swift in Sources */,
+				7625378E216893DB0044E044 /* ContactsViewController.swift in Sources */,
+				762537A0216895D30044E044 /* JSONHelper.swift in Sources */,
+				76253796216894F60044E044 /* ContactIntroViewController.swift in Sources */,
+				7625379E216895B10044E044 /* ContactsControllerModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
