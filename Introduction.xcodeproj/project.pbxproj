@@ -19,6 +19,7 @@
 		762537A0216895D30044E044 /* JSONHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7625379F216895D30044E044 /* JSONHelper.swift */; };
 		762537A2216895F50044E044 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762537A1216895F50044E044 /* UIColor.swift */; };
 		762537A4216896120044E044 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762537A3216896120044E044 /* Contact.swift */; };
+		762537A821697B190044E044 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762537A721697B190044E044 /* UIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		7625379F216895D30044E044 /* JSONHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONHelper.swift; sourceTree = "<group>"; };
 		762537A1216895F50044E044 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		762537A3216896120044E044 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
+		762537A721697B190044E044 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				762537A1216895F50044E044 /* UIColor.swift */,
+				762537A721697B190044E044 /* UIView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 			files = (
 				7625379C2168953E0044E044 /* ProfileImageCollectionViewCell.swift in Sources */,
 				7625379A2168952A0044E044 /* ContactPhotoCollectionViewController.swift in Sources */,
+				762537A821697B190044E044 /* UIView.swift in Sources */,
 				762537A4216896120044E044 /* Contact.swift in Sources */,
 				7625377621688D640044E044 /* AppDelegate.swift in Sources */,
 				76253798216895140044E044 /* ContactIntroTableViewCell.swift in Sources */,

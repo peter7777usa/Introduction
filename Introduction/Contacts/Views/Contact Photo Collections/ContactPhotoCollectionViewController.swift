@@ -62,9 +62,59 @@ class ContactPhotoCollectionViewController: UIViewController {
         setupCollectionView()
     }
     
+    func createCollectionViewShadowLayer() {
+        let size = collectionView.bounds.size
+        
+        /// Center section of the shadow
+        let centerShadowSection = CAShapeLayer()
+        let shadowPath = UIBezierPath()
+        shadowPath.move(to: CGPoint(x: size.width / 10, y: size.height))
+        shadowPath.addLine(to: CGPoint(x: size.width / 4 * 3, y: size.height))
+        shadowPath.move(to: CGPoint(x: size.width / 4, y: size.height))
+        shadowPath.addCurve(to: CGPoint(x: size.width / 4 * 3, y: size.height), controlPoint1: CGPoint(x: size.width / 2, y: size.height + 1), controlPoint2: CGPoint(x: size.width / 2, y: size.height + 1))
+        centerShadowSection.path = shadowPath.cgPath
+        centerShadowSection.strokeColor = UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1).cgColor
+        centerShadowSection.fillColor = UIColor.clear.cgColor
+        centerShadowSection.lineWidth = 1.0
+        
+        /// Left section gradient
+        let leftGradient = CAGradientLayer()
+        leftGradient.startPoint = CGPoint(x: 0, y: 0)
+        leftGradient.endPoint = CGPoint(x: 1, y: 0)
+        leftGradient.frame = CGRect(origin: CGPoint(x: size.width / 10, y: size.height - 0.5), size: CGSize(width: size.width / 4 - size.width / 10, height: 1))
+        leftGradient.colors = [UIColor(displayP3Red: 250/255, green: 250/255, blue: 250/255, alpha: 1).cgColor, UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1).cgColor]
+        
+        /// right section gradient
+        let rightGradient = CAGradientLayer()
+        rightGradient.startPoint = CGPoint(x: 0, y: 0)
+        rightGradient.endPoint = CGPoint(x: 1, y: 0)
+        rightGradient.frame = CGRect(origin: CGPoint(x: size.width / 4 * 3, y: size.height - 0.5), size: CGSize(width: size.width / 4 - size.width / 10, height: 1))
+        rightGradient.colors = [UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1).cgColor, UIColor(displayP3Red: 250/255, green: 250/255, blue: 250/255, alpha: 1).cgColor,]
+        rightGradient.shadowRadius = 1
+        
+        let shadowSubLayer = createShadowLayer()
+        shadowSubLayer.insertSublayer(centerShadowSection, at: 0)
+        shadowSubLayer.insertSublayer(leftGradient, at: 0)
+        shadowSubLayer.insertSublayer(rightGradient, at: 0)
+        collectionView.layer.addSublayer(shadowSubLayer)
+        shadowSubLayer.opacity = 1
+        
+        let fadeAnimation = CABasicAnimation(keyPath: "opacity")
+        fadeAnimation.fromValue = 1.0
+        fadeAnimation.toValue = 0.0
+        fadeAnimation.duration = 0.5
+        fadeAnimation.repeatCount = Float.greatestFiniteMagnitude
+        
+         shadowSubLayer.add(fadeAnimation, forKey: "FadeAnimation")
+        
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.collectionView.cellForItem(at: self.highlightedCellIndex)?.isSelected = true
+
+        createCollectionViewShadowLayer()
+        
     }
     
     // MARK: - Setup Methods
@@ -78,13 +128,47 @@ class ContactPhotoCollectionViewController: UIViewController {
         self.collectionView.register(ProfileImageCollectionViewCell.self, forCellWithReuseIdentifier: profileImageCollectionCellIdentifier)
         self.view.addSubview(self.collectionView)
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
+        self.collectionView.clipsToBounds = false
         
-        ///Setup constraints for CalendarCollectionDateCellCollectionView
+        ///Setup constraints for CollectionView
         let collectionViewTopConstraint = NSLayoutConstraint(item: self.view, attribute: .top, relatedBy: .equal, toItem: self.collectionView, attribute: .top, multiplier: 1.0, constant: 0)
         let collectionViewLeftConstraint = NSLayoutConstraint(item: self.view, attribute: .left, relatedBy: .equal, toItem: self.collectionView, attribute: .left, multiplier: 1.0, constant: 0)
         let collectionViewRightConstraint = NSLayoutConstraint(item: self.view, attribute: .right, relatedBy: .equal, toItem: self.collectionView, attribute: .right, multiplier: 1.0, constant: 0)
-        let collectionViewBottomConstraint = NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.collectionView, attribute: .bottom, multiplier: 1.0, constant: 0)
+        let collectionViewBottomConstraint = NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.collectionView, attribute: .bottom, multiplier: 1.0, constant: 4)
+        
         self.view.addConstraints([collectionViewTopConstraint,  collectionViewLeftConstraint, collectionViewRightConstraint, collectionViewBottomConstraint])
+        
+//        self.collectionView.layer.shadowColor = UIColor.black.cgColor
+//        self.collectionView.layer.shadowOffset = CGSize(width: 0, height: 0)
+//        self.collectionView.layer.shadowOpacity = 0.7
+//        self.collectionView.layer.shadowRadius = 5
+//        self.collectionView.layer.masksToBounds = false
+//
+//        let size = collectionView.bounds.size
+//        let curlFactor: CGFloat = 15.0
+//        let shadowDepth: CGFloat = 5.0
+//
+//        let path = UIBezierPath()
+//        path.move(to: CGPoint(x: 0, y: 0))
+//        path.addLine(to: CGPoint(x: size.width, y: 0))
+//        path.addLine(to: CGPoint(x: size.width, y: size.height + shadowDepth))
+//        path.addLine(to: CGPoint(x: 0, y: size.height * shadowDepth))
+//        path.addCurve(to: CGPoint(x: 0, y: size.height + shadowDepth), controlPoint1: CGPoint(x: size.width - curlFactor, y: size.height + shadowDepth - curlFactor), controlPoint2: CGPoint(x: curlFactor, y: size.height + shadowDepth - curlFactor))
+//
+//        self.collectionView.layer.shadowPath = path.cgPath
+        
+
+        
+    }
+    
+    func createShadowLayer() -> CALayer {
+        let shadowLayer = CALayer()
+        shadowLayer.shadowColor = UIColor.black.cgColor
+        shadowLayer.shadowOffset = CGSize(width: 0, height: 1)
+        shadowLayer.shadowRadius = 1
+        shadowLayer.shadowOpacity = 0.1
+        shadowLayer.backgroundColor = UIColor.clear.cgColor
+        return shadowLayer
     }
     
     // MARK: - Private Methods

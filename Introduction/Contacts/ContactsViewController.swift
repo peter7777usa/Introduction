@@ -57,7 +57,7 @@ class ContactsViewController: UIViewController {
         let profileImageCollectionTopConstraint = NSLayoutConstraint(item: self.view, attribute: .top, relatedBy: .equal, toItem: self.contactPhotoCollectionViewController.view, attribute: .top, multiplier: 1.0, constant: 0)
         let profileImageCollectionLeftConstraint = NSLayoutConstraint(item: self.view, attribute: .left, relatedBy: .equal, toItem: self.contactPhotoCollectionViewController.view, attribute: .left, multiplier: 1.0, constant: 0)
         let profileImageCollectionRightConstraint = NSLayoutConstraint(item: self.view, attribute: .right, relatedBy: .equal, toItem: self.contactPhotoCollectionViewController.view, attribute: .right, multiplier: 1.0, constant: 0)
-        let profileImageCollectionHeightConstraint = NSLayoutConstraint(item: self.contactPhotoCollectionViewController.view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 90)
+        let profileImageCollectionHeightConstraint = NSLayoutConstraint(item: self.contactPhotoCollectionViewController.view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 94)
         self.view.addConstraints([profileImageCollectionTopConstraint, profileImageCollectionLeftConstraint, profileImageCollectionRightConstraint, profileImageCollectionHeightConstraint])
     }
     
