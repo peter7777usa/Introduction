@@ -68,10 +68,10 @@ class ContactPhotoCollectionViewController: UIViewController {
         /// Center section of the shadow
         let centerShadowSection = CAShapeLayer()
         let shadowPath = UIBezierPath()
-        shadowPath.move(to: CGPoint(x: size.width / 10, y: size.height))
+        shadowPath.move(to: CGPoint(x: size.width / 4, y: size.height))
         shadowPath.addLine(to: CGPoint(x: size.width / 4 * 3, y: size.height))
         shadowPath.move(to: CGPoint(x: size.width / 4, y: size.height))
-        shadowPath.addCurve(to: CGPoint(x: size.width / 4 * 3, y: size.height), controlPoint1: CGPoint(x: size.width / 2, y: size.height + 1), controlPoint2: CGPoint(x: size.width / 2, y: size.height + 1))
+        shadowPath.addCurve(to: CGPoint(x: size.width / 4 * 3, y: size.height), controlPoint1: CGPoint(x: size.width / 2, y: size.height + 2), controlPoint2: CGPoint(x: size.width / 2, y: size.height + 2))
         centerShadowSection.path = shadowPath.cgPath
         centerShadowSection.strokeColor = UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1).cgColor
         centerShadowSection.fillColor = UIColor.clear.cgColor
@@ -90,7 +90,7 @@ class ContactPhotoCollectionViewController: UIViewController {
         rightGradient.endPoint = CGPoint(x: 1, y: 0)
         rightGradient.frame = CGRect(origin: CGPoint(x: size.width / 4 * 3, y: size.height - 0.5), size: CGSize(width: size.width / 4 - size.width / 10, height: 1))
         rightGradient.colors = [UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1).cgColor, UIColor(displayP3Red: 250/255, green: 250/255, blue: 250/255, alpha: 1).cgColor,]
-        rightGradient.shadowRadius = 1
+        
         
         let shadowSubLayer = createShadowLayer()
         shadowSubLayer.insertSublayer(centerShadowSection, at: 0)
@@ -105,7 +105,7 @@ class ContactPhotoCollectionViewController: UIViewController {
         fadeAnimation.duration = 0.5
         fadeAnimation.repeatCount = Float.greatestFiniteMagnitude
         
-         shadowSubLayer.add(fadeAnimation, forKey: "FadeAnimation")
+        shadowSubLayer.add(fadeAnimation, forKey: "FadeAnimation")
         
     }
     
@@ -166,7 +166,7 @@ class ContactPhotoCollectionViewController: UIViewController {
         shadowLayer.shadowColor = UIColor.black.cgColor
         shadowLayer.shadowOffset = CGSize(width: 0, height: 1)
         shadowLayer.shadowRadius = 1
-        shadowLayer.shadowOpacity = 0.1
+        shadowLayer.shadowOpacity = 0.05
         shadowLayer.backgroundColor = UIColor.clear.cgColor
         return shadowLayer
     }
