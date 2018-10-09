@@ -13,7 +13,14 @@ class ContactsViewController: UIViewController {
     let contactPhotoCollectionViewController: ContactPhotoCollectionViewController
     let contactIntroViewController: ContactIntroViewController
     
+    /// ContactPhotoCollectionView is being touch by user
+    /// -true, disable control from anywhere else trying to control the collection
+    /// -false, allow others to control the collection
     private var contactPhotoCollectionViewInFocus = false
+    
+    /// ContactIntroTableView is being touch by user
+    /// -true, disable control from anywhere else trying to control the tableview
+    /// -false, allow others to control the tableview
     private var contactIntroTableViewInFocus = false
     
     // MARK: - Init methods
@@ -46,6 +53,7 @@ class ContactsViewController: UIViewController {
     }
     
     private func setupContactPhotoCollectionView() {
+        
         ///Add ContactPhotoCollectionViewController as child
         self.contactPhotoCollectionViewController.delegate = self
         self.addChildViewController(self.contactPhotoCollectionViewController)
@@ -57,11 +65,12 @@ class ContactsViewController: UIViewController {
         let profileImageCollectionTopConstraint = NSLayoutConstraint(item: self.view, attribute: .top, relatedBy: .equal, toItem: self.contactPhotoCollectionViewController.view, attribute: .top, multiplier: 1.0, constant: 0)
         let profileImageCollectionLeftConstraint = NSLayoutConstraint(item: self.view, attribute: .left, relatedBy: .equal, toItem: self.contactPhotoCollectionViewController.view, attribute: .left, multiplier: 1.0, constant: 0)
         let profileImageCollectionRightConstraint = NSLayoutConstraint(item: self.view, attribute: .right, relatedBy: .equal, toItem: self.contactPhotoCollectionViewController.view, attribute: .right, multiplier: 1.0, constant: 0)
-        let profileImageCollectionHeightConstraint = NSLayoutConstraint(item: self.contactPhotoCollectionViewController.view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 94)
+        let profileImageCollectionHeightConstraint = NSLayoutConstraint(item: self.contactPhotoCollectionViewController.view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 100)
         self.view.addConstraints([profileImageCollectionTopConstraint, profileImageCollectionLeftConstraint, profileImageCollectionRightConstraint, profileImageCollectionHeightConstraint])
     }
     
     private func setupContactIntroView() {
+        
         ///Add ContactIntroViewController as child
         self.contactIntroViewController.delegate = self
         self.addChildViewController(self.contactIntroViewController)
@@ -105,7 +114,7 @@ extension ContactsViewController: ContactIntroViewControllerDelegate {
     }
     
     func contactIntroTableViewDidScroll(cellPosition: IndexPath, cellOffsetPercentage: CGFloat) {
-        if self.contactIntroTableViewInFocus {
+        if self.contactIntroTableViewInFocus { //user controlling tableview, take control of collection
             let convertedOffset = convertIntroTableViewOffsetToPhotoCollectionViewOffset(cellPosition: cellPosition, cellOffsetPercentage: cellOffsetPercentage)
             self.contactPhotoCollectionViewController.collectionView.setContentOffset(convertedOffset, animated: false)
         }
@@ -125,6 +134,8 @@ extension ContactsViewController: ContactPhotoCollectionViewControllerDelegate {
     }
     
     func contactPhotoCollectionViewDidScroll(cellPosition: IndexPath, cellOffsetPercentage: CGFloat) {
+        
+        /// user controlling collection, take control of tableview
         if self.contactPhotoCollectionViewInFocus {
             let convertedOffset = convertPhotoCollectionViewOffsetToIntroTableViewOffset(cellPosition: cellPosition, cellOffsetPercentage: cellOffsetPercentage)
             self.contactIntroViewController.tableView.setContentOffset(convertedOffset, animated: false)

@@ -10,7 +10,8 @@ import UIKit
 
 protocol ContactIntroViewControllerDelegate: AnyObject {
     
-    /// Use to lock up this tableview so nowhere else can control it
+    /// Use to lock up this tableview when user is scrolling
+    /// so nowhere else can control it
     /// -true, locked control, -false release control
     var contactIntroTableViewBeingScroll: Bool {get set}
     
@@ -64,7 +65,7 @@ class ContactIntroViewController: UIViewController {
         reapplyShadowLayerToIntroView(size: self.tableView.bounds.size)
     }
     
-    // MARK: - Orientation Change
+    // MARK: - Orientation Change Method
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         

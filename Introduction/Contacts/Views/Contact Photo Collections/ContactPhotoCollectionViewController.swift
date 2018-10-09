@@ -9,7 +9,13 @@
 import UIKit
 
 protocol ContactPhotoCollectionViewControllerDelegate: AnyObject {
+    
+    /// Use to lock up this collection view when user is scrolling
+    /// so nowhere else can control it
+    /// -true, locked control, -false release control
     var contactPhotoCollectionViewBeingScroll: Bool {get set}
+    
+    /// Let parent know the collectionview current cell position and the cell offset percentage
     func contactPhotoCollectionViewDidScroll(cellPosition: IndexPath, cellOffsetPercentage: CGFloat)
 }
 
@@ -25,7 +31,12 @@ class ContactPhotoCollectionViewController: UIViewController {
     let collectionView: UICollectionView
     var controllerModel: ContactsControllerModel
     weak var delegate: ContactPhotoCollectionViewControllerDelegate?
+    
+    /// Keep reference to highlighted cell index so we can deselect
     private var highlightedCellIndex = IndexPath(item: 0, section: 0)
+    
+    /// Use to hold layout inset of collectionview and recalculate
+    /// once orientation changed
     private var layoutInset = UIScreen.main.bounds.size.width / 2 - ContactPhotoCollectionViewController.photoItemSize.width / 2
     
     // MARK: - Init methods
@@ -51,11 +62,6 @@ class ContactPhotoCollectionViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        layoutInset = size.width / 2 - ContactPhotoCollectionViewController.photoItemSize.width / 2
-       self.collectionView.collectionViewLayout.invalidateLayout()
-    }
-    
     // MARK: - View controller lifecycle methods
     
     override func viewDidLoad() {
@@ -66,6 +72,13 @@ class ContactPhotoCollectionViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.collectionView.cellForItem(at: self.highlightedCellIndex)?.isSelected = true
+    }
+    
+    // MARK: - Orientation Change Method
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        layoutInset = size.width / 2 - ContactPhotoCollectionViewController.photoItemSize.width / 2
+        self.collectionView.collectionViewLayout.invalidateLayout()
     }
     
     // MARK: - Setup Methods
@@ -80,13 +93,14 @@ class ContactPhotoCollectionViewController: UIViewController {
         self.view.addSubview(self.collectionView)
         self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView.clipsToBounds = false
-        
-        ///Setup constraints for CollectionView
+        setupCollectionViewConstraint()
+    }
+    
+    private func setupCollectionViewConstraint () {
         let collectionViewTopConstraint = NSLayoutConstraint(item: self.view, attribute: .top, relatedBy: .equal, toItem: self.collectionView, attribute: .top, multiplier: 1.0, constant: 0)
         let collectionViewLeftConstraint = NSLayoutConstraint(item: self.view, attribute: .left, relatedBy: .equal, toItem: self.collectionView, attribute: .left, multiplier: 1.0, constant: 0)
         let collectionViewRightConstraint = NSLayoutConstraint(item: self.view, attribute: .right, relatedBy: .equal, toItem: self.collectionView, attribute: .right, multiplier: 1.0, constant: 0)
-        let collectionViewBottomConstraint = NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.collectionView, attribute: .bottom, multiplier: 1.0, constant: 4)
-        
+        let collectionViewBottomConstraint = NSLayoutConstraint(item: self.view, attribute: .bottom, relatedBy: .equal, toItem: self.collectionView, attribute: .bottom, multiplier: 1.0, constant: 10)
         self.view.addConstraints([collectionViewTopConstraint,  collectionViewLeftConstraint, collectionViewRightConstraint, collectionViewBottomConstraint])
     }
     
@@ -98,12 +112,35 @@ class ContactPhotoCollectionViewController: UIViewController {
         return convertedOffset
     }
     
+    /// Use to snap cell position to the closest position of a cell so the
+    /// deceleration to full stop of the collection view wont end up in between
+    /// cell
+    ///
+    /// - Parameters:
+    ///   - targetContentOffsetX: the original position the collection intended to end up
+    /// - Returns: The after calculation closet cell position we want it to end up
     private func nextClosestCellOffsetX(targetContentOffsetX: CGFloat) -> CGFloat {
         var convertedOffset = CGFloat(Int(targetContentOffsetX / ContactPhotoCollectionViewController.photoItemSize.width)) *  ContactPhotoCollectionViewController.photoItemSize.width
         if targetContentOffsetX - convertedOffset > ContactPhotoCollectionViewController.photoItemSize.width / 2 {
             convertedOffset = convertedOffset + ContactPhotoCollectionViewController.photoItemSize.width
         }
         return convertedOffset
+    }
+    
+    /// Translate ScrollView offset into current target cell position and its offset
+    /// percentage and notify parent
+    private func notifyParentOfScrollingCellPositionAndOffset(scrollView: UIScrollView) {
+        var collectionCenterPoint = self.view.convert(self.collectionView.center, to: self.collectionView)
+        let cellHighlightIndex =  self.collectionView.indexPathForItem(at: collectionCenterPoint) ?? IndexPath(item: 0, section: 0)
+        collectionCenterPoint.x = collectionCenterPoint.x -  ContactPhotoCollectionViewController.photoItemSize.width / 2
+        let cellIndexPath = self.collectionView.indexPathForItem(at: collectionCenterPoint) ?? IndexPath(item: 0, section: 0)
+        let cellScrollPercentage = (scrollView.contentOffset.x - CGFloat(cellIndexPath.row) *  ContactPhotoCollectionViewController.photoItemSize.width) /  ContactPhotoCollectionViewController.photoItemSize.width
+        if self.highlightedCellIndex != cellHighlightIndex {
+            self.collectionView.cellForItem(at: self.highlightedCellIndex)?.isSelected = false
+            self.highlightedCellIndex = cellHighlightIndex
+            self.collectionView.cellForItem(at: cellHighlightIndex)?.isSelected = true
+        }
+        self.delegate?.contactPhotoCollectionViewDidScroll(cellPosition: cellIndexPath, cellOffsetPercentage: cellScrollPercentage)
     }
 }
 
@@ -125,7 +162,7 @@ extension ContactPhotoCollectionViewController: UICollectionViewDataSource {
     }
 }
 
-// MARK: - CollectionView Delegate
+// MARK: - CollectionViewDelegateFlowLayout Delegate
 
 extension ContactPhotoCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -133,38 +170,47 @@ extension ContactPhotoCollectionViewController: UICollectionViewDelegateFlowLayo
     }
 }
 
+// MARK: - CollectionView Delegate
+
 extension ContactPhotoCollectionViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        var collectionCenterPoint = self.view.convert(self.collectionView.center, to: self.collectionView)
-        let cellHighlightIndex =  self.collectionView.indexPathForItem(at: collectionCenterPoint) ?? IndexPath(item: 0, section: 0)
-        collectionCenterPoint.x = collectionCenterPoint.x -  ContactPhotoCollectionViewController.photoItemSize.width / 2
-        let cellIndexPath = self.collectionView.indexPathForItem(at: collectionCenterPoint) ?? IndexPath(item: 0, section: 0)
-        let cellScrollPercentage = (scrollView.contentOffset.x - CGFloat(cellIndexPath.row) *  ContactPhotoCollectionViewController.photoItemSize.width) /  ContactPhotoCollectionViewController.photoItemSize.width
-        if self.highlightedCellIndex != cellHighlightIndex {
-            self.collectionView.cellForItem(at: self.highlightedCellIndex)?.isSelected = false
-            self.highlightedCellIndex = cellHighlightIndex
-            self.collectionView.cellForItem(at: cellHighlightIndex)?.isSelected = true
-        }
-        self.delegate?.contactPhotoCollectionViewDidScroll(cellPosition: cellIndexPath, cellOffsetPercentage: cellScrollPercentage)
+        notifyParentOfScrollingCellPositionAndOffset(scrollView: scrollView)
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        /// User begin dragging the collection view, retain control so
+        /// nowhere else can control this collection view
         self.delegate?.contactPhotoCollectionViewBeingScroll = true
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
+        /// This will make sure it always end up at the begining of a introduction, not
+        /// in between
         targetContentOffset.pointee.x = nextClosestCellOffsetX(targetContentOffsetX:  targetContentOffset.pointee.x)
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        /// Release control of the collection view when it comes to
+        /// to full stop from deceleration because of user's action
         self.delegate?.contactPhotoCollectionViewBeingScroll = false
     }
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        
+        /// When user select a cell on the collection view, there is an animation
+        /// that it goes from indexA -> indexB, only release control of the collection view
+        /// once the animation triggered by the user is completed
         self.delegate?.contactPhotoCollectionViewBeingScroll = false
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        /// User select the collection view cell, lock up collection view
+        /// until the the scroll to item animation is completed
+        /// look up scrollViewDidEndScrollingAnimation
         self.delegate?.contactPhotoCollectionViewBeingScroll = true
         self.collectionView.setContentOffset(CGPoint(x: CGFloat(indexPath.row) *  ContactPhotoCollectionViewController.photoItemSize.width, y: 0), animated: true)
     }
