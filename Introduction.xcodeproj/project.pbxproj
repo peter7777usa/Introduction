@@ -19,7 +19,7 @@
 		762537A0216895D30044E044 /* JSONHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7625379F216895D30044E044 /* JSONHelper.swift */; };
 		762537A2216895F50044E044 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762537A1216895F50044E044 /* UIColor.swift */; };
 		762537A4216896120044E044 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762537A3216896120044E044 /* Contact.swift */; };
-		762537A821697B190044E044 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762537A721697B190044E044 /* UIView.swift */; };
+		762537AD216C1ADB0044E044 /* PageFlipShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 762537AC216C1ADB0044E044 /* PageFlipShadow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +37,7 @@
 		7625379F216895D30044E044 /* JSONHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONHelper.swift; sourceTree = "<group>"; };
 		762537A1216895F50044E044 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		762537A3216896120044E044 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
-		762537A721697B190044E044 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		762537AC216C1ADB0044E044 /* PageFlipShadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageFlipShadow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,7 +94,6 @@
 			isa = PBXGroup;
 			children = (
 				762537A1216895F50044E044 /* UIColor.swift */,
-				762537A721697B190044E044 /* UIView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -128,6 +127,7 @@
 		76253790216894390044E044 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				762537AB216C19F10044E044 /* PageFlipShadow */,
 				762537922168944D0044E044 /* Contact Photo Collections */,
 				762537912168944B0044E044 /* Contact Introduction List */,
 			);
@@ -166,6 +166,14 @@
 				76253797216895140044E044 /* ContactIntroTableViewCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		762537AB216C19F10044E044 /* PageFlipShadow */ = {
+			isa = PBXGroup;
+			children = (
+				762537AC216C1ADB0044E044 /* PageFlipShadow.swift */,
+			);
+			path = PageFlipShadow;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -240,7 +248,6 @@
 			files = (
 				7625379C2168953E0044E044 /* ProfileImageCollectionViewCell.swift in Sources */,
 				7625379A2168952A0044E044 /* ContactPhotoCollectionViewController.swift in Sources */,
-				762537A821697B190044E044 /* UIView.swift in Sources */,
 				762537A4216896120044E044 /* Contact.swift in Sources */,
 				7625377621688D640044E044 /* AppDelegate.swift in Sources */,
 				76253798216895140044E044 /* ContactIntroTableViewCell.swift in Sources */,
@@ -249,6 +256,7 @@
 				762537A0216895D30044E044 /* JSONHelper.swift in Sources */,
 				76253796216894F60044E044 /* ContactIntroViewController.swift in Sources */,
 				7625379E216895B10044E044 /* ContactsControllerModel.swift in Sources */,
+				762537AD216C1ADB0044E044 /* PageFlipShadow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
