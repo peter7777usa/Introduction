@@ -22,12 +22,11 @@ class ContactPhotoCollectionViewController: UIViewController {
         return CGSize(width: shorterEdge / 5, height: shorterEdge / 5)
     }
     
-    private var layoutInset = UIScreen.main.bounds.size.width / 2 - ContactPhotoCollectionViewController.photoItemSize.width / 2
-    
     let collectionView: UICollectionView
     var controllerModel = ContactsControllerModel()
-    var highlightedCellIndex = IndexPath(item: 0, section: 0)
     weak var delegate: ContactPhotoCollectionViewControllerDelegate?
+    private var highlightedCellIndex = IndexPath(item: 0, section: 0)
+    private var layoutInset = UIScreen.main.bounds.size.width / 2 - ContactPhotoCollectionViewController.photoItemSize.width / 2
     
     // MARK: - Init methods
     
@@ -52,7 +51,8 @@ class ContactPhotoCollectionViewController: UIViewController {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        //calculateCollectionViewInset(size: size)
+        layoutInset = size.width / 2 - ContactPhotoCollectionViewController.photoItemSize.width / 2
+       self.collectionView.collectionViewLayout.invalidateLayout()
     }
     
     // MARK: - View controller lifecycle methods
@@ -125,6 +125,12 @@ extension ContactPhotoCollectionViewController: UICollectionViewDataSource {
 }
 
 // MARK: - CollectionView Delegate
+
+extension ContactPhotoCollectionViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: self.layoutInset, bottom: 0, right: self.layoutInset)
+    }
+}
 
 extension ContactPhotoCollectionViewController: UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
