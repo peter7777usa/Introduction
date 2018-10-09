@@ -53,66 +53,19 @@ class ContactIntroViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.shadowLayer = PageFlipShadowLayer(size: self.tableView.bounds.size)
-        self.view.layer.addSublayer(shadowLayer!)
+        reapplyShadowLayerToIntroView(size: self.tableView.bounds.size)
     }
     
-    func createShadow(size: CGSize) {
-        let size = self.tableView.bounds.size
-        /// Center section of the shadow
-        let centerShadowSection = CAShapeLayer()
-        let shadowPath = UIBezierPath()
-        shadowPath.move(to: CGPoint(x: size.width / 4, y: 0))
-        shadowPath.addLine(to: CGPoint(x: size.width / 4 * 3, y: 0))
-        shadowPath.move(to: CGPoint(x: size.width / 4, y: 0))
-        shadowPath.addCurve(to: CGPoint(x: size.width / 4 * 3, y: 0), controlPoint1: CGPoint(x: size.width / 2, y: size.height + 2), controlPoint2: CGPoint(x: size.width / 2, y: size.height + 2))
-        centerShadowSection.path = shadowPath.cgPath
-        centerShadowSection.strokeColor = UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1).cgColor
-        centerShadowSection.fillColor = UIColor.clear.cgColor
-        centerShadowSection.lineWidth = 1.0
-        
-        /// Left section gradient
-        let leftGradient = CAGradientLayer()
-        leftGradient.startPoint = CGPoint(x: 0, y: 0)
-        leftGradient.endPoint = CGPoint(x: 1, y: 0)
-        leftGradient.frame = CGRect(origin: CGPoint(x: size.width / 10, y: -0.5), size: CGSize(width: size.width / 4 - size.width / 10, height: 1))
-        leftGradient.colors = [UIColor(displayP3Red: 250/255, green: 250/255, blue: 250/255, alpha: 1).cgColor, UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1).cgColor]
-        
-        
-        /// right section gradient
-        let rightGradient = CAGradientLayer()
-        rightGradient.startPoint = CGPoint(x: 0, y: 0)
-        rightGradient.endPoint = CGPoint(x: 1, y: 0)
-        rightGradient.frame = CGRect(origin: CGPoint(x: size.width / 4 * 3, y: -0.5), size: CGSize(width: size.width / 4 - size.width / 10, height: 1))
-        rightGradient.colors = [UIColor(displayP3Red: 245/255, green: 245/255, blue: 245/255, alpha: 1).cgColor, UIColor(displayP3Red: 250/255, green: 250/255, blue: 250/255, alpha: 1).cgColor,]
-        
-        
-        let shadowLayer = CALayer()
-        shadowLayer.shadowColor = UIColor.black.cgColor
-        shadowLayer.shadowOffset = CGSize(width: 0, height: 1)
-        shadowLayer.shadowRadius = 1
-        shadowLayer.shadowOpacity = 0.05
-        shadowLayer.backgroundColor = UIColor.clear.cgColor
-        shadowLayer.insertSublayer(centerShadowSection, at: 0)
-        shadowLayer.insertSublayer(leftGradient, at: 0)
-        shadowLayer.insertSublayer(rightGradient, at: 0)
-        //   self.collectionView.layer.addSublayer(shadowLayer)
-        
-        self.view.layer.addSublayer(shadowLayer)
-        shadowLayer.opacity = 1
-        
-        let fadeAnimation = CABasicAnimation(keyPath: "opacity")
-        fadeAnimation.fromValue = 1.0
-        fadeAnimation.toValue = 0.0
-        fadeAnimation.duration = 0.5
-        fadeAnimation.repeatCount = Float.greatestFiniteMagnitude
+    // MARK: - Orientation Change
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        reapplyShadowLayerToIntroView(size: size)
     }
     
     
     // MARK: - Setup Methods
     
     private func setupTableView() {
-        
         self.tableView.allowsSelection = false
         self.tableView.separatorStyle = .none
         self.tableView.decelerationRate =  UIScrollViewDecelerationRateFast
@@ -133,6 +86,13 @@ class ContactIntroViewController: UIViewController {
     }
     
     // MARK: - Private Methods
+    
+    private func reapplyShadowLayerToIntroView(size: CGSize) {
+        self.shadowLayer?.removeFromSuperlayer()
+        let shadowLayer = PageFlipShadowLayer(size: size)
+        self.shadowLayer = shadowLayer
+        self.view.layer.addSublayer(shadowLayer)
+    }
     
     private func convertPhotoCollectionViewOffsetToIntroTableViewOffset(cellPosition: IndexPath, cellOffsetPercentage: CGFloat) -> CGPoint {
         var convertedOffset = CGPoint(x: 0, y: self.tableView.rectForRow(at: cellPosition).origin.y)
