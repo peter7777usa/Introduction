@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PageFlipShadowLayer: CALayer {
+class PageFlipHorizontalShadowLayer: CALayer {
     
     // MARK: - Init methods
     
@@ -20,9 +20,14 @@ class PageFlipShadowLayer: CALayer {
         super.init(layer: layer)
     }
     
-    convenience required init(size: CGSize) {
+    /// Create a horizontal shadow layer from given view's paramenters
+    ///
+    /// - Parameters:
+    ///   - containerViewSize: The size of the container for this shadow
+    ///   - shadowYPosition: The Y position where this layer will go to
+    convenience required init(containerViewSize: CGSize, shadowYPosition: CGFloat) {
         self.init()
-        self.createShadow(size: size)
+        self.createShadow(size: containerViewSize, shadowYPosition: shadowYPosition)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -31,14 +36,14 @@ class PageFlipShadowLayer: CALayer {
     
     // MARK: - drawing methods
     
-    private func createShadow(size: CGSize) {
+    private func createShadow(size: CGSize, shadowYPosition: CGFloat) {
         /// Center section of the shadow
         let centerShadowSection = CAShapeLayer()
         let shadowPath = UIBezierPath()
-        shadowPath.move(to: CGPoint(x: size.width / 4, y: 0))
-        shadowPath.addLine(to: CGPoint(x: size.width / 4 * 3, y: 0))
-        shadowPath.move(to: CGPoint(x: size.width / 4, y: 0))
-        shadowPath.addCurve(to: CGPoint(x: size.width / 4 * 3, y: 0), controlPoint1: CGPoint(x: size.width / 2, y: 1.5), controlPoint2: CGPoint(x: size.width / 2, y: 1.5))
+        shadowPath.move(to: CGPoint(x: size.width / 4, y: shadowYPosition))
+        shadowPath.addLine(to: CGPoint(x: size.width / 4 * 3, y: shadowYPosition))
+        shadowPath.move(to: CGPoint(x: size.width / 4, y: shadowYPosition))
+        shadowPath.addCurve(to: CGPoint(x: size.width / 4 * 3, y: shadowYPosition), controlPoint1: CGPoint(x: size.width / 2, y: 1.5), controlPoint2: CGPoint(x: size.width / 2, y: 1.5))
         centerShadowSection.path = shadowPath.cgPath
         centerShadowSection.strokeColor = UIColor.msLightGray1().cgColor
         centerShadowSection.fillColor = UIColor.clear.cgColor

@@ -23,14 +23,14 @@ class ContactPhotoCollectionViewController: UIViewController {
     }
     
     let collectionView: UICollectionView
-    var controllerModel = ContactsControllerModel()
+    var controllerModel: ContactsControllerModel
     weak var delegate: ContactPhotoCollectionViewControllerDelegate?
     private var highlightedCellIndex = IndexPath(item: 0, section: 0)
     private var layoutInset = UIScreen.main.bounds.size.width / 2 - ContactPhotoCollectionViewController.photoItemSize.width / 2
     
     // MARK: - Init methods
     
-    init() {
+    private init() {
         let collectionViewLayout = UICollectionViewFlowLayout()
         collectionViewLayout.scrollDirection = .horizontal
         collectionViewLayout.itemSize = ContactPhotoCollectionViewController.photoItemSize
@@ -38,6 +38,7 @@ class ContactPhotoCollectionViewController: UIViewController {
         collectionViewLayout.minimumLineSpacing = 0
         collectionViewLayout.sectionInset = UIEdgeInsets(top: 0, left: self.layoutInset, bottom: 0, right: self.layoutInset)
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
+        self.controllerModel = ContactsControllerModel()
         super.init(nibName: nil, bundle: nil)
     }
     

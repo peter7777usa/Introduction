@@ -28,7 +28,7 @@ class ContactIntroTableViewCell: UITableViewCell {
         setupLabelsStyle()
         setupConstraintForCell()
         self.aboutMeLabel.text = "About me"
-        self.introLabel.text = "test"
+        self.introLabel.text = ""
     }
     
     required init?(coder aDecoder: NSCoder) {

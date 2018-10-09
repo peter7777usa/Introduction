@@ -9,15 +9,20 @@
 import UIKit
 
 protocol ContactIntroViewControllerDelegate: AnyObject {
+    
+    /// Use to lock up this tableview so nowhere else can control it
+    /// -true, locked control, -false release control
     var contactIntroTableViewBeingScroll: Bool {get set}
+    
+    /// Let parent know the tableview current cell position and the cell offset percentage
     func contactIntroTableViewDidScroll(cellPosition: IndexPath, cellOffsetPercentage: CGFloat)
 }
 
 class ContactIntroViewController: UIViewController {
     let tableView: UITableView
-    var controllerModel = ContactsControllerModel()
+    var controllerModel: ContactsControllerModel
     weak var delegate: ContactIntroViewControllerDelegate?
-    var shadowLayer: PageFlipShadowLayer?
+    var shadowLayer: PageFlipHorizontalShadowLayer?
     
     /// Variables used to track tableview movment
     private var scrollDirection: ScrollDirection = .none
@@ -30,8 +35,9 @@ class ContactIntroViewController: UIViewController {
     
     // MARK: - Init methods
     
-    init() {
+    private init() {
         self.tableView = UITableView(frame: .zero)
+        self.controllerModel = ContactsControllerModel()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -53,12 +59,16 @@ class ContactIntroViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        ///Apply shadow layer only after we have layout tableview's rect
         reapplyShadowLayerToIntroView(size: self.tableView.bounds.size)
     }
     
     // MARK: - Orientation Change
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        
+        ///Destroy and reapply shadow layer because of orientation change
         reapplyShadowLayerToIntroView(size: size)
     }
     
@@ -76,8 +86,10 @@ class ContactIntroViewController: UIViewController {
         self.tableView.estimatedRowHeight = 100
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        ///Setup constraints for ContactIntroViewController
+        setupTableViewConstraints()
+    }
+    
+    private func setupTableViewConstraints() {
         let tableViewTopConstraint = NSLayoutConstraint(item: self.view, attribute: .top, relatedBy: .equal, toItem: self.tableView, attribute: .top, multiplier: 1.0, constant: 0)
         let tableViewLeftConstraint = NSLayoutConstraint(item: self.view, attribute: .left, relatedBy: .equal, toItem: self.tableView, attribute: .left, multiplier: 1.0, constant: 0)
         let tableViewViewRightConstraint = NSLayoutConstraint(item: self.view, attribute: .right, relatedBy: .equal, toItem: self.tableView, attribute: .right, multiplier: 1.0, constant: 0)
@@ -89,18 +101,19 @@ class ContactIntroViewController: UIViewController {
     
     private func reapplyShadowLayerToIntroView(size: CGSize) {
         self.shadowLayer?.removeFromSuperlayer()
-        let shadowLayer = PageFlipShadowLayer(size: size)
+        let shadowLayer = PageFlipHorizontalShadowLayer(containerViewSize: size, shadowYPosition: 0)
         self.shadowLayer = shadowLayer
         self.view.layer.addSublayer(shadowLayer)
     }
     
-    private func convertPhotoCollectionViewOffsetToIntroTableViewOffset(cellPosition: IndexPath, cellOffsetPercentage: CGFloat) -> CGPoint {
-        var convertedOffset = CGPoint(x: 0, y: self.tableView.rectForRow(at: cellPosition).origin.y)
-        convertedOffset.y = convertedOffset.y +  self.tableView.rectForRow(at: IndexPath(row: cellPosition.row, section: 0)).size.height * cellOffsetPercentage
-        if convertedOffset.y < 0 {
-            convertedOffset.y = 0
+    /// Translate ScrollView offset into current target cell position and its offset
+    /// percentage and notify parent
+    private func notifyParentOfScrollingCellPositionAndOffset(scrollView: UIScrollView) {
+        if let draggingCellIndexPath = self.tableView.indexPathForRow(at: scrollView.contentOffset) {
+            let cellRect = self.tableView.rectForRow(at: draggingCellIndexPath)
+            let cellOffsetPercentage = (scrollView.contentOffset.y - cellRect.origin.y) / cellRect.size.height
+            self.delegate?.contactIntroTableViewDidScroll(cellPosition: draggingCellIndexPath, cellOffsetPercentage: cellOffsetPercentage)
         }
-        return convertedOffset
     }
 }
 
@@ -118,11 +131,17 @@ extension ContactIntroViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        /// tell the parent the tableview is being interacted, lock up
+        /// so nowhere else can control the tableview
         self.delegate?.contactIntroTableViewBeingScroll = true
+        
         self.shadowLayer?.fadeIn()
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        /// Determine dragging direction of the touch by comparing it to the cache offset
         if self.cachedOffset.y >= scrollView.contentOffset.y {
             self.scrollDirection = .up
         } else if cachedOffset.y < scrollView.contentOffset.y {
@@ -130,14 +149,13 @@ extension ContactIntroViewController: UITableViewDelegate, UITableViewDataSource
         }
         self.cachedOffset = scrollView.contentOffset
         
-        if let draggingCellIndexPath = self.tableView.indexPathForRow(at: scrollView.contentOffset) {
-            let cellRect = self.tableView.rectForRow(at: draggingCellIndexPath)
-            let cellOffsetPercentage = (scrollView.contentOffset.y - cellRect.origin.y) / cellRect.size.height
-            self.delegate?.contactIntroTableViewDidScroll(cellPosition: draggingCellIndexPath, cellOffsetPercentage: cellOffsetPercentage)
-        }
+        notifyParentOfScrollingCellPositionAndOffset(scrollView: scrollView)
     }
     
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        
+        /// This provide the paging effect by snaping the tableview to the last or next
+        /// cell position based on its scrolling direction
         guard let currentCellIndex = self.tableView.indexPathsForVisibleRows?.first else { return }
         var targetIndexPath = IndexPath(item: currentCellIndex.row, section: 0)
         switch scrollDirection {
@@ -153,7 +171,11 @@ extension ContactIntroViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        /// Release control of the tableview when the tableview comes to
+        /// complete stop from user action
         self.delegate?.contactIntroTableViewBeingScroll = false
+        
         self.shadowLayer?.fadeOut()
     }
 }
